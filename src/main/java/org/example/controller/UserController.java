@@ -2,10 +2,10 @@ package org.example.controller;
 
 import jakarta.annotation.PostConstruct;
 import org.example.dto.UserDTO;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +45,7 @@ public class UserController {
         userDTO3.setTelephone("1234-3454");
         userDTO3.setDateRegister(new Date());
 
+        // adiciona as listagem de usuários na lista users
         users.add(userDTO);
         users.add(userDTO2);
         users.add(userDTO3);
@@ -55,8 +56,32 @@ public class UserController {
         return "Spring boot is working!";
     }
 
+    /// Retorna uma lista de objetos UserDTO representando todos os usuários disponíveis
     @GetMapping("/users")
     public List<UserDTO> getUsers() {
         return users;
     }
+
+
+    //Retorna um usuário com base no cpf
+    @GetMapping("/users/{cpf}")
+    public List<UserDTO> getUsersFilter(@PathVariable String cpf) {
+
+        for(UserDTO userFilter : users){
+            if(userFilter.getCpf().equals(cpf)){
+                return Collections.singletonList(userFilter);
+            }
+        }
+        return null;
+    }
+    @PostMapping("/newUser")
+    public UserDTO insert(@RequestBody UserDTO userDTO){
+        userDTO.setDateRegister(new Date());
+        users.add(userDTO);
+        return userDTO;
+    }
+
+
 }
+
+
